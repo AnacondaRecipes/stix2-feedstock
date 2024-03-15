@@ -1,0 +1,69 @@
+{% set name = "stix2" %}
+{% set version = "3.0.1" %}
+
+package:
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
+
+source:
+  url: "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz"
+  sha256: 2a2718dc3451c84c709990b2ca220cc39c75ed23e0864d7e8d8190a9365b0cbf
+
+build:
+  number: 0
+  skip: true  # [py>311]
+  script: "{{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation"
+
+requirements:
+  host:
+    - pip
+    - python
+    - pytz
+    - requests
+    - simplejson
+    - stix2-patterns >=1.2.0
+    - wheel
+    - setuptools
+  run:
+    - python
+    - pytz
+    - requests
+    - simplejson
+    - stix2-patterns >=1.2.0
+
+test:
+  imports:
+    - stix2
+    - stix2.canonicalization
+    - stix2.confidence
+    - stix2.datastore
+    - stix2.equivalence
+    - stix2.equivalence.graph
+    - stix2.equivalence.object
+    - stix2.equivalence.pattern
+    - stix2.equivalence.pattern.compare
+    - stix2.equivalence.pattern.transform
+    - stix2.markings
+    - stix2.v20
+    - stix2.v21
+  requires:
+    - pip
+    - coverage
+    - pytest
+    - pytest-cov
+  commands:
+    - pip check
+    - python -m pytest --cov=stix2 stix2/test/ --cov-report term-missing -W ignore::stix2.exceptions.STIXDeprecationWarning
+
+about:
+  home: "https://oasis-open.github.io/cti-documentation/"
+  license: BSD
+  license_family: BSD
+  license_file: 
+  summary: "Produce and consume STIX 2 JSON content"
+  doc_url: https://stix2.readthedocs.io/en/latest/
+  dev_url: https://github.com/oasis-open/cti-python-stix2/
+
+extra:
+  recipe-maintainers:
+    - your-github-id-here
