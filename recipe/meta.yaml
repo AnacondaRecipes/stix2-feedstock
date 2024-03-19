@@ -6,8 +6,9 @@ package:
   version: "{{ version }}"
 
 source:
-  url: "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz"
-  sha256: 2a2718dc3451c84c709990b2ca220cc39c75ed23e0864d7e8d8190a9365b0cbf
+  # using github archive due to including tests
+  url: "https://github.com/oasis-open/cti-python-stix2/archive/refs/tags/v{{ version }}.tar.gz"
+  sha256: a6a20a36c211d84a992985e4496ee82e61f3608281f37e5381f833b6019355e3
 
 build:
   number: 0
@@ -27,6 +28,24 @@ requirements:
     - simplejson
     - stix2-patterns >=1.2.0
 
+# Skipping tests that had relative imports and are not correctly run
+{% set tests_to_ignore = "" %}
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/test_workbench.py" %}
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/v20/test_bundle.py" %}
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/v20/test_custom.py" %}
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/v20/test_datastore_taxii.py" %}
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/v20/test_malware.py" %}
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/v20/test_object_markings.py" %}
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/v20/test_observed_data.py"%}
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/v21/test_bundle.py"%}
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/v21/test_custom.py"%}
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/v21/test_datastore_taxii.py"%}
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/v21/test_malware.py"%}
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/v21/test_object_markings.py"%}
+# Skipping test that requires missing test dependencies (taxii2-client, haversine, medallion)
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/v20/test_environment.py"%}
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/v21/test_environment.py"%}
+
 test:
   imports:
     - stix2
@@ -45,8 +64,13 @@ test:
   requires:
     - pip
     - pytest
+    - rapidfuzz
+  source_files:
+    - stix2/test
   commands:
     - pip check
+    - pytest stix2/test/ -v {{ tests_to_ignore }}
+
 about:
   home: https://oasis-open.github.io/cti-documentation/
   description: |
@@ -56,7 +80,7 @@ about:
   license_family: BSD
   license_file: LICENSE
   summary: Produce and consume STIX 2 JSON content
-  doc_url: https://stix2.readthedocs.io/en/latest/
+  doc_url: https://stix2.readthedocs.io/
   dev_url: https://github.com/oasis-open/cti-python-stix2/
 
 extra:
