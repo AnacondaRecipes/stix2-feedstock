@@ -45,18 +45,16 @@ test:
   requires:
     - pip
     - pytest
-  #source_files:
-    # - stix2/test
   commands:
     - pip check
-    # - pytest stix2/test/ -v term-missing -W ignore::stix2.exceptions.STIXDeprecationWarning
-    # - pytest stix2/test/ -v --ignore=stix2/test/test_workbench.py --ignore=stix2/test/v20/test_bundle.py --ignore=stix2/test/v20/test_custom.py --ignore=stix2/test/v20/test_datastore_taxii.py --ignore=stix2/test/v20/test_malware.py --ignore=stix2/test/v20/test_object_markings.py --ignore=stix2/test/v20/test_observed_data.py  --ignore=stix2/test/v21/test_bundle.py --ignore=stix2/test/v21/test_custom.py --ignore=stix2/test/v21/test_datastore_taxii.py --ignore=stix2/test/v21/test_malware.py --ignore=stix2/test/v21/test_object_markings.py
-
 about:
   home: "https://oasis-open.github.io/cti-documentation/"
-  license: BSD
+  description: |
+    Provides Python APIs for serializing and de-serializing STIX2 JSON content, along with higher-level APIs for common tasks, 
+    including data markings, versioning, and for resolving STIX IDs across multiple data sources.
+  license: BSD-3-Clause
   license_family: BSD
-  license_file: 
+  license_file: LICENSE
   summary: "Produce and consume STIX 2 JSON content"
   doc_url: https://stix2.readthedocs.io/en/latest/
   dev_url: https://github.com/oasis-open/cti-python-stix2/
