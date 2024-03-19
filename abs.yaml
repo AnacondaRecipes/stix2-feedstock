@@ -1,2 +1,2 @@
-channels:  
-  - https://staging.continuum.io/prefect/fs/stix2-patterns-feedstock/pr1/357cdb8
+upload_channels:
+  - sfe1ed40
