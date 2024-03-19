@@ -48,17 +48,17 @@ test:
   commands:
     - pip check
 about:
-  home: "https://oasis-open.github.io/cti-documentation/"
+  home: https://oasis-open.github.io/cti-documentation/
   description: |
     Provides Python APIs for serializing and de-serializing STIX2 JSON content, along with higher-level APIs for common tasks, 
     including data markings, versioning, and for resolving STIX IDs across multiple data sources.
   license: BSD-3-Clause
   license_family: BSD
   license_file: LICENSE
-  summary: "Produce and consume STIX 2 JSON content"
+  summary: Produce and consume STIX 2 JSON content
   doc_url: https://stix2.readthedocs.io/en/latest/
   dev_url: https://github.com/oasis-open/cti-python-stix2/
 
 extra:
   recipe-maintainers:
-    - your-github-id-here
+    - psteyer
