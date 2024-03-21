@@ -27,6 +27,8 @@ requirements:
     - requests
     - simplejson
     - stix2-patterns >=1.2.0
+  run_constrained:
+    - taxii2-client >=2.3.0
 
 # Skipping tests that had relative imports and are not correctly run
 {% set tests_to_ignore = "" %}
