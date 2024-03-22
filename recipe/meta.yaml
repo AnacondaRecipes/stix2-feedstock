@@ -1,0 +1,90 @@
+{% set name = "stix2" %}
+{% set version = "3.0.1" %}
+
+package:
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
+
+source:
+  # using github archive due to including tests
+  url: "https://github.com/oasis-open/cti-python-stix2/archive/refs/tags/v{{ version }}.tar.gz"
+  sha256: a6a20a36c211d84a992985e4496ee82e61f3608281f37e5381f833b6019355e3
+
+build:
+  number: 0
+  skip: true  # [py>311]
+  script: "{{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation"
+
+requirements:
+  host:
+    - pip
+    - python
+    - wheel
+    - setuptools
+  run:
+    - python
+    - pytz
+    - requests
+    - simplejson
+    - stix2-patterns >=1.2.0
+  run_constrained:
+    - taxii2-client >=2.3.0
+
+# Skipping tests that had relative imports and are not correctly run
+{% set tests_to_ignore = "" %}
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/test_workbench.py" %}
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/v20/test_bundle.py" %}
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/v20/test_custom.py" %}
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/v20/test_datastore_taxii.py" %}
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/v20/test_malware.py" %}
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/v20/test_object_markings.py" %}
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/v20/test_observed_data.py"%}
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/v21/test_bundle.py"%}
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/v21/test_custom.py"%}
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/v21/test_datastore_taxii.py"%}
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/v21/test_malware.py"%}
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/v21/test_object_markings.py"%}
+# Skipping test that requires missing test dependencies (taxii2-client, haversine, medallion)
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/v20/test_environment.py"%}
+{% set tests_to_ignore = tests_to_ignore + " --ignore=stix2/test/v21/test_environment.py"%}
+
+test:
+  imports:
+    - stix2
+    - stix2.canonicalization
+    - stix2.confidence
+    - stix2.datastore
+    - stix2.equivalence
+    - stix2.equivalence.graph
+    - stix2.equivalence.object
+    - stix2.equivalence.pattern
+    - stix2.equivalence.pattern.compare
+    - stix2.equivalence.pattern.transform
+    - stix2.markings
+    - stix2.v20
+    - stix2.v21
+  requires:
+    - pip
+    - pytest
+    - rapidfuzz
+  source_files:
+    - stix2/test
+  commands:
+    - pip check
+    - pytest stix2/test/ -v {{ tests_to_ignore }}
+
+about:
+  home: https://oasis-open.github.io/cti-documentation/
+  description: |
+    Provides Python APIs for serializing and de-serializing STIX2 JSON content, along with higher-level APIs for common tasks, 
+    including data markings, versioning, and for resolving STIX IDs across multiple data sources.
+  license: BSD-3-Clause
+  license_family: BSD
+  license_file: LICENSE
+  summary: Produce and consume STIX 2 JSON content
+  doc_url: https://stix2.readthedocs.io/
+  dev_url: https://github.com/oasis-open/cti-python-stix2/
+
+extra:
+  recipe-maintainers:
+    - psteyer
